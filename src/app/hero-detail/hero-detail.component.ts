@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
-import { Hero } from '../hero';
+import {Hero} from '../hero';
+import {ActivatedRoute, convertToParamMap, Router} from "@angular/router";
+import {HeroService} from "../hero.service";
 
 @Component({
   selector: 'app-hero-detail',
@@ -8,19 +10,35 @@ import { Hero } from '../hero';
   styleUrls: [ './hero-detail.component.scss' ]
 })
 export class HeroDetailComponent implements OnInit {
-  hero: Hero | undefined;
+  hero: Hero = {} as Hero;
 
-  constructor() {}
-
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private heroService: HeroService
+  ) { }
   ngOnInit(): void {
-    this.getHero();
+    this.route.params.subscribe((route) => {
+      const id = convertToParamMap(route).get('id')
+
+      if (!id) {
+        console.warn('No id found')
+      }
+
+      this.getHero(Number(id))
+    })
   }
 
-  getHero(): void {
-    // Your code here, please
+  getHero(id: number): void {
+    this.heroService.getHero(id).subscribe(hero => {
+      this.hero = hero
+    })
   }
 
   goBack(): void {
-    // Your code here, please 2
+    this.router.navigateByUrl('/dashboard')
+      .then(r => {
+        return
+      });
   }
 }

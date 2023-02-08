@@ -1,21 +1,35 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
-import { Hero } from './hero';
-
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {catchError, Observable, throwError} from 'rxjs';
+import {Hero} from './hero';
+import {Router} from "@angular/router";
 
 @Injectable({ providedIn: 'root' })
 export class HeroService {
-  private heroesUrl = 'api/heroes';  // URL to web api
+  private heroesUrl = 'api/heroes';
 
-  constructor() {}
+  constructor(
+    private httpClient: HttpClient,
+    private router: Router
+  ) {}
 
   getHeroes(): Observable<Hero[]> {
-    // Your code here, please
+    return this.httpClient.get<Hero[]>(this.heroesUrl)
   }
 
   getHero(id: number): Observable<Hero> {
-    // Your code here, please 2
+    return this.httpClient.get<Hero>(`${this.heroesUrl}/${id}`)
+      .pipe(
+        catchError((err) => {
+          if (err.status === 404) {
+            this.router.navigateByUrl('/dashboard')
+              .then(() => {
+                return throwError(() => new Error(err.body.error));
+              });
+          }
+
+          return throwError(() => new Error(err.body.error));
+        })
+      )
   }
 }

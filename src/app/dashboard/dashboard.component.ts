@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Hero } from '../hero';
+import {HeroService} from "../hero.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-dashboard',
@@ -9,13 +11,22 @@ import { Hero } from '../hero';
 export class DashboardComponent implements OnInit {
   heroes: Hero[] = [];
 
-  constructor() {}
+  constructor(
+    private service: HeroService,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.getHeroes();
   }
 
   getHeroes(): void {
-    // Your code here, please
+    this.service.getHeroes().subscribe(heroes => {
+      this.heroes = heroes
+    })
+  }
+
+  goToHero(id: number): Promise<boolean> {
+    return this.router.navigateByUrl(`details/${id}`)
   }
 }
