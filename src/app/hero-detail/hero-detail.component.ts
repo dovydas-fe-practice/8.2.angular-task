@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core'
 
 import { Hero } from '../hero'
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router'
-import { HeroService } from '../hero.service'
+import { HeroService } from '../services/hero.service'
 import { catchError, EMPTY } from 'rxjs'
 
 @Component({
