@@ -1,10 +1,10 @@
-import {Directive, HostBinding, HostListener} from '@angular/core';
+import { Directive, HostBinding, HostListener } from '@angular/core'
 
 @Directive({
   selector: '[appHero]',
 })
 export class HeroDirective {
-  @HostBinding('style.backgroundColor') backgroundColor: string = '#c4c3c3';
+  @HostBinding('style.backgroundColor') backgroundColor: string = '#c4c3c3'
 
   @HostListener('mouseover', ['$event.target'])
   onMouseOver() {
@@ -16,4 +16,3 @@ export class HeroDirective {
     this.backgroundColor = '#c4c3c3'
   }
 }
-

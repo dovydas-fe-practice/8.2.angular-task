@@ -1,32 +1,29 @@
-import { Component, OnInit } from '@angular/core';
-import { Hero } from '../hero';
-import {HeroService} from "../hero.service";
-import {Router} from "@angular/router";
+import { Component, OnInit } from '@angular/core'
+import { Hero } from '../hero'
+import { HeroService } from '../hero.service'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: [ './dashboard.component.scss' ]
+  styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-  heroes: Hero[] = [];
+  heroes: Hero[] = []
 
-  constructor(
-    private service: HeroService,
-    private router: Router,
-  ) {}
+  constructor(private service: HeroService, private router: Router) {}
 
   ngOnInit(): void {
-    this.getHeroes();
+    this.getHeroes()
   }
 
   getHeroes(): void {
-    this.service.getHeroes().subscribe(heroes => {
+    this.service.getHeroes().subscribe((heroes) => {
       this.heroes = heroes
     })
   }
 
   goToHero(id: number): Promise<boolean> {
-    return this.router.navigateByUrl(`details/${id}`)
+    return this.router.navigate([`details/${id}`])
   }
 }

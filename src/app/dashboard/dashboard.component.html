@@ -1,6 +1,12 @@
-<h2>Heroes: </h2>
+<h2>Heroes:</h2>
 <div class="heroes-menu">
- <div *ngFor="let hero of heroes" appHero>
-   <button type="button" class="btn btn-primary-outline pull-right" (click)="goToHero(hero.id)">{{hero.name}}</button>
- </div>
+  <div *ngFor="let hero of heroes" appHero>
+    <button
+      type="button"
+      class="btn btn-primary-outline pull-right"
+      (click)="goToHero(hero.id)"
+    >
+      {{ hero.name }}
+    </button>
+  </div>
 </div>
