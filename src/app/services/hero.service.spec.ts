@@ -1,49 +1,54 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing'
 import { HeroService } from './hero.service'
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing'
+import { HttpClient } from '@angular/common/http'
 import { Hero } from '../hero'
+import { of } from 'rxjs'
+
+let httpClientSpy: jasmine.SpyObj<HttpClient>
+let heroService: HeroService
+
+beforeEach(() => {
+  // TODO: spy on other methods too
+  httpClientSpy = jasmine.createSpyObj('HttpClient', ['get'])
+  heroService = new HeroService(httpClientSpy)
+})
 
 describe('HeroService', () => {
-  let service: HeroService
-  let httpTestingController: HttpTestingController
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-    })
-    httpTestingController = TestBed.inject(HttpTestingController)
-    service = TestBed.inject(HeroService)
-  })
-
-  afterEach(() => {
-    httpTestingController.verify()
-  })
-
   it('should be created', () => {
-    expect(service).toBeTruthy()
+    expect(heroService).toBeTruthy()
   })
 
-  it('should return heroes', function () {
-    fakeAsync(() => {
-      // let response: Hero[] = [
-      //   { id: 1, name: 'John Doe' },
-      //   { id: 2, name: 'Jane Doe' },
-      // ]
-      //
-      // const actualResponse = service.getHeroes()
-      //
-      // const req = httpTestingController.expectOne('api/heroes')
-      // expect(req.request.method).toEqual('GET')
-      // // Respond with this data when called
-      // req.flush(response)
-      //
-      // // Call tick whic actually processes te response
-      // tick()
-      //
-      // console.log(actualResponse)
+  it('should return expected heroes', (done: DoneFn) => {
+    const expectedHeroes: Hero[] = [
+      { id: 1, name: 'A' },
+      { id: 2, name: 'B' },
+    ]
+
+    httpClientSpy.get.and.returnValue(of(expectedHeroes))
+
+    heroService.getHeroes().subscribe({
+      next: (heroes) => {
+        expect(heroes).withContext('expected heroes').toEqual(expectedHeroes)
+        done()
+      },
+      error: done.fail,
     })
+    expect(httpClientSpy.get.calls.count()).withContext('one call').toBe(1)
+  })
+
+  it('should return expected hero with provided ID', (done: DoneFn) => {
+    const id = 2
+    const expectedHero: Hero = { id, name: 'A' }
+
+    httpClientSpy.get.and.returnValue(of(expectedHero))
+
+    heroService.getHero(id).subscribe({
+      next: (heroes) => {
+        expect(heroes).withContext('expected heroes').toEqual(expectedHero)
+        done()
+      },
+      error: done.fail,
+    })
+    expect(httpClientSpy.get.calls.count()).withContext('one call').toBe(1)
+    expect(httpClientSpy.get).toHaveBeenCalledOnceWith(`api/heroes/${id}`)
   })
 })
