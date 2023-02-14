@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit } from '@angular/core';
 
-import { Hero } from '../hero'
-import { ActivatedRoute, convertToParamMap, Router } from '@angular/router'
-import { HeroService } from '../services/hero.service'
-import { catchError, EMPTY } from 'rxjs'
+import { Hero } from '../hero';
+import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
+import { HeroService } from '../services/hero.service';
+import { catchError, EMPTY } from 'rxjs';
 
 @Component({
   selector: 'app-hero-detail',
@@ -11,7 +11,7 @@ import { catchError, EMPTY } from 'rxjs'
   styleUrls: ['./hero-detail.component.scss'],
 })
 export class HeroDetailComponent implements OnInit {
-  hero: Hero = {} as Hero
+  hero: Hero = {} as Hero;
 
   constructor(
     private route: ActivatedRoute,
@@ -21,14 +21,14 @@ export class HeroDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((route) => {
-      const id = convertToParamMap(route).get('id')
+      const id = convertToParamMap(route).get('id');
 
       if (!id) {
-        console.warn('No id found')
+        console.warn('No id found');
       }
 
-      this.getHero(Number(id))
-    })
+      this.getHero(Number(id));
+    });
   }
 
   getHero(id: number): void {
@@ -37,18 +37,18 @@ export class HeroDetailComponent implements OnInit {
       .pipe(
         catchError((err) => {
           if (err.status === 404) {
-            this.router.navigate(['/dashboard'])
+            this.router.navigate(['/dashboard']);
           }
 
-          return EMPTY
+          return EMPTY;
         })
       )
       .subscribe((hero) => {
-        this.hero = hero
-      })
+        this.hero = hero;
+      });
   }
 
   goBack(): void {
-    this.router.navigate(['/dashboard'])
+    this.router.navigate(['/dashboard']);
   }
 }
